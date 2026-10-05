@@ -166,7 +166,229 @@
 - 서버 실행·종료 방법, 포트와 기본 URL.
 - 선택 기능과 미완성 사항이 있다면 그 내용.
 - 생성된 빌드 결과물이나 의존성 설치 폴더는 PR에서 제외해주세요!
+
+
 </details>
+
+<details>
+
+<summary><b>초보반</b></summary>
+
+# 게시글 CRUD REST API 구현 과제
+
+## 1. 학습 목표와 완료 기준
+
+Spring Boot를 이용하여 간단한 **게시글 CRUD REST API**를 구현합니다.
+
+- Spring Boot 프로젝트 생성
+- 게시글 CRUD API 구현
+- HTTP Method와 Request / Response 흐름 이해
+- Controller / Service 역할 고민
+- GitHub Repository를 통한 과제 제출
+
+10/6 스터디 전까지 가능한 만큼 먼저 구현하고, 스터디 이후 학습한 내용을 바탕으로 코드를 보완하여 제출합니다.
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>기준</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>구현 스택</td>
+      <td>Spring Boot</td>
+    </tr>
+    <tr>
+      <td>저장 방식</td>
+      <td>DB X, 메모리 (<code>List</code>, <code>Map</code> 등)</td>
+    </tr>
+    <tr>
+      <td>초기 상태</td>
+      <td>서버 재시작 시 데이터가 없는 상태</td>
+    </tr>
+    <tr>
+      <td>필수 제출물</td>
+      <td>구현 코드, README</td>
+    </tr>
+    <tr>
+      <td>제출 기한</td>
+      <td>2026.10.11 23:59까지</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 2. 공통 데이터 규칙
+
+게시글은 다음 세 필드로 구성합니다.
+
+```text
+Post
+├─ id
+├─ title
+└─ content
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>필드</th>
+      <th>규칙</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td>서버에서 생성하는 고유한 값</td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td>게시글 제목</td>
+    </tr>
+    <tr>
+      <td><code>content</code></td>
+      <td>게시글 내용</td>
+    </tr>
+  </tbody>
+</table>
+
+이번 과제에서는 **DB를 사용하지 않습니다.**
+
+`List`, `Map` 등 원하는 자료구조를 이용하여 메모리에 저장합니다.  
+서버를 종료하고 다시 실행하면 기존 데이터가 사라져도 됩니다.
+
+---
+
+## 3. 필수 기능
+
+다음 5개의 API를 구현합니다.
+
+<table>
+  <thead>
+    <tr>
+      <th>기능</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>게시글 등록</td>
+      <td>새로운 게시글 생성</td>
+    </tr>
+    <tr>
+      <td>전체 조회</td>
+      <td>모든 게시글 조회</td>
+    </tr>
+    <tr>
+      <td>단건 조회</td>
+      <td>특정 게시글 조회</td>
+    </tr>
+    <tr>
+      <td>게시글 수정</td>
+      <td>기존 게시글 수정</td>
+    </tr>
+    <tr>
+      <td>게시글 삭제</td>
+      <td>기존 게시글 삭제</td>
+    </tr>
+  </tbody>
+</table>
+
+URI, HTTP Method, Request / Response 형식 등 **구체적인 API 설계는 직접 결정합니다.**
+
+### 직접 고민해볼 것
+
+- URI는 어떻게 설계할까?
+- 각 기능에 어떤 HTTP Method를 사용할까?
+- Controller와 Service의 역할은 어떻게 나눌까?
+- Request / Response는 어떤 형태로 만들까?
+- DTO가 필요할까?
+- 어떤 HTTP Status Code를 반환하는 것이 적절할까?
+- 존재하지 않는 게시글은 어떻게 처리할까?
+
+검색, 공식 문서, 강의, 블로그, 예제 등을 자유롭게 참고해도 됩니다.
+
+---
+
+## 4. 선택 Challenge
+
+기본 기능을 완료했다면 원하는 내용을 추가로 구현할 수 있습니다.
+
+- Request / Response DTO 분리
+- `ResponseEntity` 사용
+- 존재하지 않는 게시글 처리
+- 적절한 HTTP Status Code 적용
+- 간단한 Validation
+- Repository 계층 분리
+
+> Challenge는 필수가 아닙니다. 기본 CRUD 구현을 우선으로 진행해주세요.
+
+---
+
+## 5. 동작 확인
+
+Postman, IntelliJ HTTP Client 등 원하는 도구를 이용하여 다음 흐름이 정상적으로 동작하는지 확인합니다.
+
+```text
+게시글 생성
+    ↓
+전체 조회
+    ↓
+단건 조회
+    ↓
+게시글 수정
+    ↓
+게시글 삭제
+```
+
+Challenge를 구현했다면 잘못된 요청이나 존재하지 않는 게시글에 대한 처리도 확인해보세요.
+
+---
+
+## 6. 제출 방법
+
+과제는 **개인 GitHub Repository**를 통해 제출합니다.
+
+이번에 생성한 Spring Boot 프로젝트는 이후 과제에서도 새로 만들지 않고 **계속 발전시키는 방식**으로 사용합니다.
+
+Repository는 **Public을 권장**합니다.
+
+Private Repository로 진행해야 하는 경우 아래 계정을 Collaborator로 추가해주세요.
+
+```text
+GitHub: sinyeowon
+Email: ioohyou@knu.ac.kr
+```
+
+### README 필수 내용
+
+- 사용한 언어 / Java / Spring Boot 버전
+- 프로젝트 실행 방법
+- 구현한 API와 기능
+- 진행한 Challenge (있는 경우)
+- 구현하면서 고민했거나 어려웠던 점
+
+---
+
+## 7. 참고
+
+과제를 완성하지 못해도 괜찮습니다.  
+구현 중 막힌 부분이 있다면 현재까지 작성한 코드로 제출해도 됩니다.
+
+이번 과제에서는 완성된 결과물보다
+
+**직접 구현 → 스터디에서 학습 → 코드 보완 → 코드 리뷰 → 개선**
+
+과정을 중요하게 생각합니다.
+
+궁금하거나 구현 중 막히는 부분은 자유롭게 질문해주세요!
+
+</details>
+</details>
+
 </li>
 </ul>
 
