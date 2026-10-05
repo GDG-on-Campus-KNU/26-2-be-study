@@ -1,6 +1,8 @@
 package com.example._0262_gdgoc_be_study.controller
 
-import com.example._0262_gdgoc_be_study.dto.PostRequest
+import com.example._0262_gdgoc_be_study.domain.Post
+import com.example._0262_gdgoc_be_study.dto.CreatePostRequest
+import com.example._0262_gdgoc_be_study.dto.UpdatePostRequest
 import com.example._0262_gdgoc_be_study.dto.PostResponse
 import com.example._0262_gdgoc_be_study.service.PostService
 import org.springframework.http.HttpStatus
@@ -14,29 +16,29 @@ class PostController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createPost(
-        @RequestBody request: PostRequest
+        @RequestBody request: CreatePostRequest
     ): PostResponse {
-        return postService.createPost(request)
+        return postService.createPost(title = request.title, content = request.content).toResponse()
     }
 
     @GetMapping
     fun getPosts(): List<PostResponse> {
-        return postService.getPosts()
+        return postService.getPosts().map { it.toResponse() }
     }
 
     @GetMapping("/{id}")
     fun getPost(
         @PathVariable id: Int
     ): PostResponse {
-        return postService.getPost(id)
+        return postService.getPost(id).toResponse()
     }
 
     @PutMapping("/{id}")
     fun updatePost(
         @PathVariable id: Int,
-        @RequestBody request: PostRequest
+        @RequestBody request: UpdatePostRequest
     ): PostResponse {
-        return postService.updatePost(id, request)
+        return postService.updatePost(id = id, title = request.title, content = request.content).toResponse()
     }
 
     @DeleteMapping("/{id}")
@@ -45,5 +47,9 @@ class PostController(
         @PathVariable id: Int
     ) {
         postService.deletePost(id)
+    }
+
+    private fun Post.toResponse(): PostResponse {
+        return PostResponse(id = id, title = title, content = content)
     }
 }
