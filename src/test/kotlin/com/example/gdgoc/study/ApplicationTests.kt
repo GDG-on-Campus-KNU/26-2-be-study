@@ -1,4 +1,4 @@
-package com.example._0262_gdgoc_be_study
+package com.example.gdgoc.study
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -9,5 +9,4 @@ class ApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

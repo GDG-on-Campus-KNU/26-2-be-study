@@ -1,6 +1,6 @@
-package com.example._0262_gdgoc_be_study.repository
+package com.example.gdgoc.study.repository
 
-import com.example._0262_gdgoc_be_study.domain.Post
+import com.example.gdgoc.study.domain.Post
 import org.springframework.stereotype.Repository
 
 interface PostRepository {
@@ -16,21 +16,15 @@ interface PostRepository {
  */
 @Repository
 class PostRepositoryImpl(
-    private val posts: ArrayList<Post> = arrayListOf()
-): PostRepository {
+    private val posts: ArrayList<Post> = arrayListOf(),
+) : PostRepository {
     private var nextPostId = (posts.maxOfOrNull { it.id } ?: 0) + 1
 
-    override fun nextId(): Int {
-        return nextPostId++
-    }
+    override fun nextId(): Int = nextPostId++
 
-    override fun findById(id: Int): Post? {
-        return posts.find { it.id == id }
-    }
+    override fun findById(id: Int): Post? = posts.find { it.id == id }
 
-    override fun findAll(): ArrayList<Post> {
-        return ArrayList(posts)
-    }
+    override fun findAll(): ArrayList<Post> = ArrayList(posts)
 
     override fun save(post: Post) {
         val index = posts.indexOfFirst { it.id == post.id }

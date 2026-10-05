@@ -1,4 +1,4 @@
-package com.example._0262_gdgoc_be_study
+package com.example.gdgoc.study
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

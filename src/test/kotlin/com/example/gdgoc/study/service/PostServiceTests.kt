@@ -1,14 +1,14 @@
-package com.example._0262_gdgoc_be_study.service
+package com.example.gdgoc.study.service
 
-import com.example._0262_gdgoc_be_study.domain.PostNotFoundException
-import com.example._0262_gdgoc_be_study.repository.PostRepositoryImpl
+import com.example.gdgoc.study.domain.PostNotFoundException
+import com.example.gdgoc.study.repository.PostRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertSame
-import kotlin.test.assertFailsWith
 
 class PostServiceTests {
     private val repository = PostRepositoryImpl()
@@ -20,6 +20,7 @@ class PostServiceTests {
 
         val first = service.createPost("첫 제목", "첫 내용")
         val second = service.createPost("두 번째 제목", "두 번째 내용")
+
         assertNotEquals(first.id, second.id)
         assertEquals("첫 제목", first.title)
         assertEquals("첫 내용", first.content)
@@ -27,6 +28,7 @@ class PostServiceTests {
         assertEquals(listOf(first, second), service.getPosts())
 
         val updated = service.updatePost(first.id, "수정 제목", "수정 내용")
+
         assertEquals(first.id, updated.id)
         assertEquals("수정 제목", updated.title)
         assertEquals("수정 내용", updated.content)
@@ -34,6 +36,7 @@ class PostServiceTests {
         assertEquals(listOf(updated, second), service.getPosts())
 
         service.deletePost(first.id)
+
         assertEquals(listOf(second), service.getPosts())
         assertFailsWith<PostNotFoundException> { service.getPost(first.id) }
         assertFailsWith<PostNotFoundException> { service.deletePost(first.id) }
