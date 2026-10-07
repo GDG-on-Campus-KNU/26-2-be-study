@@ -1,0 +1,7 @@
+DELETE http://localhost:8080/posts/1
+Content-Type: application/json
+
+{
+    "title": "첫번째는 이겁니다",
+    "content": "화이팅"
+}
