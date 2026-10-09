@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -28,6 +29,11 @@ public class PostController {
     public ResponseEntity<List<Post>> findAll() {
         var result = postService.findAll();
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> findById(@PathVariable String id) {
+        return postService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
 }

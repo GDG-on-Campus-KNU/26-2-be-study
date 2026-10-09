@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,5 +22,9 @@ public class PostService {
 
     public List<Post> findAll() {
         return new ArrayList<>(posts);
+    }
+
+    public Optional<Post> findById(String id) {
+        return posts.stream().filter(post -> post.getId().equals(id)).findFirst();
     }
 }
