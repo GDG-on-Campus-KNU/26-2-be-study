@@ -35,4 +35,8 @@ public class PostService {
             return found;
         });
     }
+
+    public boolean delete(String id) {
+        return posts.removeIf(post -> post.getId().equals(id));
+    }
 }

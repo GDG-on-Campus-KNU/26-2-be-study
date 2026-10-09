@@ -40,4 +40,12 @@ public class PostController {
     public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post request) {
         return postService.update(id, request).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        if (postService.delete(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
