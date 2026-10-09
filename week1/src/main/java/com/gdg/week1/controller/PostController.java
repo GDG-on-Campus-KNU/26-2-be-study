@@ -36,4 +36,8 @@ public class PostController {
         return postService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post request) {
+        return postService.update(id, request).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 }

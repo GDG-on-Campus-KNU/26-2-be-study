@@ -27,4 +27,12 @@ public class PostService {
     public Optional<Post> findById(String id) {
         return posts.stream().filter(post -> post.getId().equals(id)).findFirst();
     }
+
+    public Optional<Post> update(String id, Post request) {
+        return findById(id).map(found -> {
+            found.setTitle(request.getTitle());
+            found.setContent(request.getContent());
+            return found;
+        });
+    }
 }
