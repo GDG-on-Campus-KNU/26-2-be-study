@@ -2,8 +2,8 @@ package com._62bestudy.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com._62bestudy.application.exception.DuplicateUserNameException;
 import com._62bestudy.application.exception.UserNotFoundException;
-import com._62bestudy.domain.exception.InvalidUserException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class UserServiceTest {
     @Test
     void 유저를_생성한다() {
         var user = userService.create(
-                "홍길동",
+                "생성유저",
                 "password"
         );
 
@@ -31,7 +31,7 @@ class UserServiceTest {
         assertEquals(7, id.version());
         assertNotNull(user.getCreatedAt());
         assertNotNull(user.getUpdatedAt());
-        assertEquals("홍길동", user.getName());
+        assertEquals("생성유저", user.getName());
         assertNotEquals("password", user.getPassword());
         assertTrue(passwordEncoder.matches("password", user.getPassword()));
     }
@@ -39,7 +39,7 @@ class UserServiceTest {
     @Test
     void 유저를_조회한다() {
         var created = userService.create(
-                "홍길동",
+                "조회유저",
                 "password"
         );
 
@@ -53,7 +53,7 @@ class UserServiceTest {
     @Test
     void 유저를_수정한다() {
         var created = userService.create(
-                "홍길동",
+                "수정유저",
                 "password"
         );
 
@@ -68,12 +68,38 @@ class UserServiceTest {
     }
 
     @Test
-    void 비밀번호가_비어_있으면_예외가_발생한다() {
+    void 이름이_중복되면_예외가_발생한다() {
+        userService.create(
+                "중복유저",
+                "password"
+        );
+
         assertThrows(
-                InvalidUserException.class,
+                DuplicateUserNameException.class,
                 () -> userService.create(
-                        "홍길동",
-                        " "
+                        "중복유저",
+                        "password"
+                )
+        );
+    }
+
+    @Test
+    void 다른_유저의_이름으로_수정하면_예외가_발생한다() {
+        var user = userService.create(
+                "원래유저",
+                "password"
+        );
+        userService.create(
+                "이미있는유저",
+                "password"
+        );
+
+        assertThrows(
+                DuplicateUserNameException.class,
+                () -> userService.update(
+                        user.getId(),
+                        "이미있는유저",
+                        "password"
                 )
         );
     }

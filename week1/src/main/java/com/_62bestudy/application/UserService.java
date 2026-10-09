@@ -1,9 +1,9 @@
 package com._62bestudy.application;
 
+import com._62bestudy.application.exception.DuplicateUserNameException;
 import com._62bestudy.application.exception.UserNotFoundException;
 import com._62bestudy.domain.User;
 import com._62bestudy.domain.UserRepository;
-import com._62bestudy.domain.exception.InvalidUserException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +18,15 @@ public class UserService {
     private final IdGenerator idGenerator;
 
     public User create(String name, String password) {
+        validateDuplicateName(name);
+
+        var id = idGenerator.generate();
+        var encodedPassword = passwordEncoder.encode(password);
+
         var user = User.create(
-                idGenerator.generate(),
+                id,
                 name,
-                encodePassword(password)
+                encodedPassword
         );
 
         return userRepository.save(user);
@@ -38,12 +43,17 @@ public class UserService {
                 ));
     }
 
-    public User update(String id, String name, String password) {
+    public User update(String id, String newName, String password) {
         var user = findById(id);
+        var userName = user.getName();
+
+        if (!userName.equals(newName)) {
+            validateDuplicateName(newName);
+        }
 
         user.update(
-                name,
-                encodePassword(password)
+                newName,
+                passwordEncoder.encode(password)
         );
 
         return userRepository.save(user);
@@ -55,11 +65,9 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private String encodePassword(String password) {
-        if (password.isBlank()) {
-            throw new InvalidUserException("비밀번호는 비어 있을 수 없습니다.");
+    private void validateDuplicateName(String name) {
+        if (userRepository.existsByName(name)) {
+            throw new DuplicateUserNameException("이미 사용 중인 이름입니다.");
         }
-
-        return passwordEncoder.encode(password);
     }
 }

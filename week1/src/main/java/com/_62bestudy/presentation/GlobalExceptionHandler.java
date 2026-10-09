@@ -1,5 +1,6 @@
 package com._62bestudy.presentation;
 
+import com._62bestudy.application.exception.DuplicateUserNameException;
 import com._62bestudy.application.exception.PostNotFoundException;
 import com._62bestudy.application.exception.UserNotFoundException;
 import com._62bestudy.domain.exception.InvalidPostException;
@@ -59,6 +60,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidUserException.class)
     public ResponseEntity<ErrorResponse> handleInvalidUser(
             InvalidUserException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(DuplicateUserNameException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateUserName(
+            DuplicateUserNameException exception
     ) {
         var response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
