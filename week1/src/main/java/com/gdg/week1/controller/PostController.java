@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/posts")
 
@@ -22,5 +24,10 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Post>> findAll() {
+        var result = postService.findAll();
+        return ResponseEntity.ok(result);
+    }
 
 }

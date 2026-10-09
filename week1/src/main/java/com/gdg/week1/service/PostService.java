@@ -18,4 +18,8 @@ public class PostService {
         posts.add(post);
         return post;
     }
+
+    public List<Post> findAll() {
+        return new ArrayList<>(posts);
+    }
 }
