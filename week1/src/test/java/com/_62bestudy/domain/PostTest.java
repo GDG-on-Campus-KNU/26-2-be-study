@@ -15,7 +15,7 @@ class PostTest {
         var body = "본문";
         var createdAt = LocalDateTime.of(2026, 10, 3, 12, 0);
 
-        var post = new Post(id, title, body, createdAt);
+        var post = Post.create(id, title, body, createdAt);
 
         assertEquals(id, post.getId());
         assertEquals(title, post.getTitle());
@@ -39,7 +39,7 @@ class PostTest {
 
         assertThrows(
                 InvalidPostException.class,
-                () -> new Post(
+                () -> Post.create(
                         "post-id",
                         title,
                         "본문",
@@ -54,7 +54,7 @@ class PostTest {
 
         assertThrows(
                 InvalidPostException.class,
-                () -> new Post(
+                () -> Post.create(
                         "post-id",
                         "제목",
                         body,
@@ -64,7 +64,7 @@ class PostTest {
     }
 
     private Post createPost() {
-        return new Post(
+        return Post.create(
                 "post-id",
                 "제목",
                 "본문",

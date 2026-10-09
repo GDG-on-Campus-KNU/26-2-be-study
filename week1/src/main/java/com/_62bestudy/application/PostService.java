@@ -18,7 +18,7 @@ public class PostService {
     public Post create(String title, String body) {
         var id = postIdGenerator.generate();
 
-        var post = new Post(
+        var post = Post.create(
                 id,
                 title,
                 body,
