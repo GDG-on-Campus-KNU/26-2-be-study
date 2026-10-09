@@ -3,7 +3,6 @@ package com._62bestudy.domain;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com._62bestudy.domain.exception.InvalidPostException;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 class PostTest {
@@ -13,14 +12,14 @@ class PostTest {
         var id = "post-id";
         var title = "제목";
         var body = "본문";
-        var createdAt = LocalDateTime.of(2026, 10, 3, 12, 0);
 
-        var post = Post.create(id, title, body, createdAt);
+        var post = Post.create(id, title, body);
 
         assertEquals(id, post.getId());
+        assertNull(post.getCreatedAt());
+        assertNull(post.getUpdatedAt());
         assertEquals(title, post.getTitle());
         assertEquals(body, post.getBody());
-        assertEquals(createdAt, post.getCreatedAt());
     }
 
     @Test
@@ -42,8 +41,7 @@ class PostTest {
                 () -> Post.create(
                         "post-id",
                         title,
-                        "본문",
-                        LocalDateTime.now()
+                        "본문"
                 )
         );
     }
@@ -57,8 +55,7 @@ class PostTest {
                 () -> Post.create(
                         "post-id",
                         "제목",
-                        body,
-                        LocalDateTime.now()
+                        body
                 )
         );
     }
@@ -67,8 +64,7 @@ class PostTest {
         return Post.create(
                 "post-id",
                 "제목",
-                "본문",
-                LocalDateTime.of(2026, 10, 3, 12, 0)
+                "본문"
         );
     }
 }

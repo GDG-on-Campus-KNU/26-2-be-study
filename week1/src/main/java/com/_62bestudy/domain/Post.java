@@ -5,45 +5,36 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "posts")
-public class Post {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Post extends BaseEntity {
 
     private static final int MAX_TITLE_LENGTH = 100;
     private static final int MAX_BODY_LENGTH = 5000;
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     private String id;
 
-    @Column(name = "title", nullable = false, length = MAX_TITLE_LENGTH)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "body", nullable = false, length = MAX_BODY_LENGTH)
+    @Column(name = "body", nullable = false)
     private String body;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    protected Post() {
-    }
-
-    private Post(String id, String title, String body, LocalDateTime createdAt) {
+    private Post(String id, String title, String body) {
         validateTitle(title);
         validateBody(body);
 
         this.id = id;
         this.title = title;
         this.body = body;
-        this.createdAt = createdAt;
-    }
-
-    public static Post create(String id, String title, String body, LocalDateTime createdAt) {
-        return new Post(id, title, body, createdAt);
     }
 
     public void update(String title, String body) {
@@ -52,6 +43,10 @@ public class Post {
 
         this.title = title;
         this.body = body;
+    }
+
+    public static Post create(String id, String title, String body) {
+        return new Post(id, title, body);
     }
 
     private void validateTitle(String title) {

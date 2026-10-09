@@ -1,7 +1,9 @@
 package com._62bestudy.presentation;
 
 import com._62bestudy.application.exception.PostNotFoundException;
+import com._62bestudy.application.exception.UserNotFoundException;
 import com._62bestudy.domain.exception.InvalidPostException;
+import com._62bestudy.domain.exception.InvalidUserException;
 import com._62bestudy.presentation.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +28,37 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(
+            UserNotFoundException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
     @ExceptionHandler(InvalidPostException.class)
     public ResponseEntity<ErrorResponse> handleInvalidPost(
             InvalidPostException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUser(
+            InvalidUserException exception
     ) {
         var response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
