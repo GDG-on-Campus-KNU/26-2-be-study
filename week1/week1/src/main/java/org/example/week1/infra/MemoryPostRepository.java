@@ -9,7 +9,7 @@ import java.util.*;
 
 @Repository
 public class MemoryPostRepository implements PostRepository {
-    private final Map<Long, Post> posts = new HashMap<Long, Post>();
+    private final Map<String, Post> posts = new HashMap<String, Post>();
 
     @Override
     public Post save(Post post) {

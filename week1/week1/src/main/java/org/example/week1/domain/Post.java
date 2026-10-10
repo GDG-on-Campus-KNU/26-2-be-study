@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class Post {
-    Long id;
+    String id;
     String title;
     String content;
 
