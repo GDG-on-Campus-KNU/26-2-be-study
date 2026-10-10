@@ -1,8 +1,8 @@
-package org.example.week1.domain.post;
+package org.example.week1.application;
 
 import lombok.RequiredArgsConstructor;
-import org.example.week1.domain.post.dto.PostRequest;
-import org.example.week1.domain.post.dto.PostUpdateRequest;
+import org.example.week1.domain.Post;
+import org.example.week1.domain.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

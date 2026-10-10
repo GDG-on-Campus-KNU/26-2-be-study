@@ -1,4 +1,4 @@
-package org.example.week1.domain.post.dto;
+package org.example.week1.presentation.dto;
 
 import lombok.Getter;
 

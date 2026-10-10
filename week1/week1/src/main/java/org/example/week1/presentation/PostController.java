@@ -1,9 +1,11 @@
-package org.example.week1.domain.post;
+package org.example.week1.presentation;
 
 import lombok.RequiredArgsConstructor;
-import org.example.week1.domain.post.dto.PostRequest;
-import org.example.week1.domain.post.dto.PostResponse;
-import org.example.week1.domain.post.dto.PostUpdateRequest;
+import org.example.week1.domain.Post;
+import org.example.week1.application.PostService;
+import org.example.week1.presentation.dto.PostRequest;
+import org.example.week1.presentation.dto.PostResponse;
+import org.example.week1.presentation.dto.PostUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
