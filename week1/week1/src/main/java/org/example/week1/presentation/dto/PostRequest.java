@@ -1,9 +1,8 @@
 package org.example.week1.presentation.dto;
 
-import lombok.Getter;
 
-@Getter
-public class PostRequest {
-    String title;
-    String content;
+public record PostRequest (
+        String title,
+        String content
+) {
 }

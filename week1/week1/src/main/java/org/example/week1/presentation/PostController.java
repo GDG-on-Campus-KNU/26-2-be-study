@@ -21,7 +21,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> post(@RequestBody PostRequest request) {
-        Post post = postService.post(request.getTitle(), request.getContent());
+        Post post = postService.post(request.title(), request.content());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(PostResponse.from(post));
@@ -41,7 +41,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<PostResponse> patch(@PathVariable Long id,
                                               @RequestBody PostUpdateRequest request) {
-        Post post = postService.update(id, request.getTitle(), request.getContent());
+        Post post = postService.update(id, request.title(), request.content());
         return ResponseEntity.ok(PostResponse.from(post));
     }
 
