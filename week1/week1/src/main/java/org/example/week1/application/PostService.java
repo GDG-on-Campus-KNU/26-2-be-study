@@ -6,16 +6,15 @@ import org.example.week1.domain.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final AtomicLong sequence = new AtomicLong(0);
+    private final PostIdGenerator postIdGenerator;
 
     public Post post(String title, String content) {
-        Post post = new Post(sequence.incrementAndGet(), title, content);
+        Post post = new Post(postIdGenerator.generateId(),title,content);
         return postRepository.save(post);
     }
 

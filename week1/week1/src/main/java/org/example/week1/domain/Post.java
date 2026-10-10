@@ -8,6 +8,12 @@ public class Post {
     String title;
     String content;
 
+    public Post (String id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+    }
+
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
