@@ -28,14 +28,17 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts() {
-        List<Post> posts = postService.findAll();
+    public ResponseEntity<List<PostResponse>> getPosts() {
+        List<PostResponse> posts = postService.findAll()
+                .stream()
+                .map(PostResponse::from)
+                .toList();
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable String id) {
-        return ResponseEntity.ok(postService.findById(id));
+    public ResponseEntity<PostResponse> getPost(@PathVariable String id) {
+        return ResponseEntity.ok(PostResponse.from(postService.findById(id)));
     }
 
     @PatchMapping("/{id}")
