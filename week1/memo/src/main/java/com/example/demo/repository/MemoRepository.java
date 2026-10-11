@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class MemoRepository {
@@ -22,5 +23,13 @@ public class MemoRepository {
 
     public List<Memo> findAll(){
         return new ArrayList<>(store.values());
+    }
+
+    public Optional<Memo> findById(Long id){
+        return Optional.ofNullable(store.get(id));
+    }
+
+    public void delete(Long id){
+        store.remove(id);
     }
 }
