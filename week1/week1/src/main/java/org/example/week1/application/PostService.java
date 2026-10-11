@@ -22,18 +22,18 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post findById(Long id) {
+    public Post findById(String id) {
         return postRepository.findById(id)
                 .orElseThrow();
     }
 
-    public Post update(Long id, String title, String content) {   // ")" 빠져 있었고, 파라미터도 변경
+    public Post update(String id, String title, String content) {   // ")" 빠져 있었고, 파라미터도 변경
         Post post = findById(id);
         post.update(title, content);
         return postRepository.save(post);
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         postRepository.deleteById(id);   // void 메서드에서 return 제거
     }
 }

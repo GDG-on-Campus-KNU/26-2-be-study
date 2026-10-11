@@ -34,19 +34,19 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable Long id) {
+    public ResponseEntity<Post> getPost(@PathVariable String id) {
         return ResponseEntity.ok(postService.findById(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PostResponse> patch(@PathVariable Long id,
+    public ResponseEntity<PostResponse> patch(@PathVariable String id,
                                               @RequestBody PostUpdateRequest request) {
         Post post = postService.update(id, request.title(), request.content());
         return ResponseEntity.ok(PostResponse.from(post));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         postService.delete(id);
         return ResponseEntity.noContent().build();
     }
