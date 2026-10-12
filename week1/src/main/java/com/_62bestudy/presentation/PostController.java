@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -27,7 +28,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(
-            @RequestBody PostCreateRequest request
+            @Validated @RequestBody PostCreateRequest request
     ) {
         var post = postService.create(
                 request.title(),
@@ -63,7 +64,7 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> update(
             @PathVariable String id,
-            @RequestBody PostUpdateRequest request
+            @Validated @RequestBody PostUpdateRequest request
     ) {
         var post = postService.update(
                 id,
