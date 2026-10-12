@@ -4,6 +4,9 @@ import com._62bestudy.application.PostService;
 import com._62bestudy.presentation.dto.PostCreateRequest;
 import com._62bestudy.presentation.dto.PostResponse;
 import com._62bestudy.presentation.dto.PostUpdateRequest;
+import com._62bestudy.presentation.resolver.CurrentUser;
+import com._62bestudy.presentation.resolver.LoginUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +29,8 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(
-            @RequestBody PostCreateRequest request
+            @LoginUser CurrentUser currentUser,
+            @Valid @RequestBody PostCreateRequest request
     ) {
         var post = postService.create(
                 request.title(),
@@ -62,7 +66,7 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> update(
             @PathVariable String id,
-            @RequestBody PostUpdateRequest request
+            @Valid @RequestBody PostUpdateRequest request
     ) {
         var post = postService.update(
                 id,

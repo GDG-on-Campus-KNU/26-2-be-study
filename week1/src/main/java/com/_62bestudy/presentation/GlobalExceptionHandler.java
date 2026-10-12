@@ -1,11 +1,13 @@
 package com._62bestudy.presentation;
 
 import com._62bestudy.application.exception.DuplicateUserNameException;
+import com._62bestudy.application.exception.InvalidLoginException;
 import com._62bestudy.application.exception.PostNotFoundException;
 import com._62bestudy.application.exception.UserNotFoundException;
 import com._62bestudy.domain.exception.InvalidPostException;
 import com._62bestudy.domain.exception.InvalidUserException;
 import com._62bestudy.presentation.dto.ErrorResponse;
+import com._62bestudy.presentation.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -82,6 +84,34 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidLogin(
+            InvalidLoginException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
     }
 
