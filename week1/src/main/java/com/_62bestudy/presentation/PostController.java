@@ -33,6 +33,7 @@ public class PostController {
             @Valid @RequestBody PostCreateRequest request
     ) {
         var post = postService.create(
+                currentUser.id(),
                 request.title(),
                 request.body()
         );
@@ -65,10 +66,12 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> update(
+            @LoginUser CurrentUser currentUser,
             @PathVariable String id,
             @Valid @RequestBody PostUpdateRequest request
     ) {
         var post = postService.update(
+                currentUser.id(),
                 id,
                 request.title(),
                 request.body()
@@ -81,9 +84,10 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
+            @LoginUser CurrentUser currentUser,
             @PathVariable String id
     ) {
-        postService.delete(id);
+        postService.delete(currentUser.id(), id);
 
         return ResponseEntity.noContent().build();
     }

@@ -12,14 +12,16 @@ class PostTest {
         var id = "post-id";
         var title = "제목";
         var body = "본문";
+        var author = createUser();
 
-        var post = Post.create(id, title, body);
+        var post = Post.create(id, title, body, author);
 
         assertEquals(id, post.getId());
         assertNull(post.getCreatedAt());
         assertNull(post.getUpdatedAt());
         assertEquals(title, post.getTitle());
         assertEquals(body, post.getBody());
+        assertEquals(author, post.getAuthor());
     }
 
     @Test
@@ -41,7 +43,8 @@ class PostTest {
                 () -> Post.create(
                         "post-id",
                         title,
-                        "본문"
+                        "본문",
+                        createUser()
                 )
         );
     }
@@ -55,7 +58,8 @@ class PostTest {
                 () -> Post.create(
                         "post-id",
                         "제목",
-                        body
+                        body,
+                        createUser()
                 )
         );
     }
@@ -64,7 +68,16 @@ class PostTest {
         return Post.create(
                 "post-id",
                 "제목",
-                "본문"
+                "본문",
+                createUser()
+        );
+    }
+
+    private User createUser() {
+        return User.create(
+                "user-id",
+                "유저",
+                "password"
         );
     }
 }

@@ -1,6 +1,7 @@
 package com._62bestudy.presentation;
 
 import com._62bestudy.application.exception.DuplicateUserNameException;
+import com._62bestudy.application.exception.ForbiddenPostAccessException;
 import com._62bestudy.application.exception.InvalidLoginException;
 import com._62bestudy.application.exception.PostNotFoundException;
 import com._62bestudy.application.exception.UserNotFoundException;
@@ -112,6 +113,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
+    @ExceptionHandler(ForbiddenPostAccessException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenPostAccess(
+            ForbiddenPostAccessException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(response);
     }
 

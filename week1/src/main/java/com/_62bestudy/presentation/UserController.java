@@ -1,11 +1,15 @@
 package com._62bestudy.presentation;
 
+import com._62bestudy.application.PostService;
 import com._62bestudy.application.SessionService;
 import com._62bestudy.application.UserService;
+import com._62bestudy.presentation.dto.PostResponse;
 import com._62bestudy.presentation.dto.UserCreateRequest;
 import com._62bestudy.presentation.dto.UserLoginRequest;
 import com._62bestudy.presentation.dto.UserResponse;
 import com._62bestudy.presentation.dto.UserUpdateRequest;
+import com._62bestudy.presentation.resolver.CurrentUser;
+import com._62bestudy.presentation.resolver.LoginUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,6 +33,7 @@ public class UserController {
 
     private final UserService userService;
     private final SessionService sessionService;
+    private final PostService postService;
 
     @PostMapping
     public ResponseEntity<UserResponse> create(
@@ -61,6 +66,29 @@ public class UserController {
         response.setHeader(SessionAttributes.SESSION_HEADER_NAME, sessionId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> findMe(
+            @LoginUser CurrentUser currentUser
+    ) {
+        var user = userService.findById(currentUser.id());
+
+        return ResponseEntity.ok(
+                UserResponse.from(user)
+        );
+    }
+
+    @GetMapping("/me/posts")
+    public ResponseEntity<List<PostResponse>> findMyPosts(
+            @LoginUser CurrentUser currentUser
+    ) {
+        var posts = postService.findAllByAuthorId(currentUser.id())
+                .stream()
+                .map(PostResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping

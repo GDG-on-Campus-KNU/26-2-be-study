@@ -73,3 +73,94 @@ InMemoryPostRepository
 - Controller, Service, Domain, Repository는 각각 어떤 책임을 가져야 하는가?
 - 객체의 상태를 외부에서 꺼내 판단하기보다 객체에게 행동을 요청할 수 있는가?
 - 메서드 이름만으로 객체의 의도와 책임이 드러나는가?
+
+---
+
+## 현재 구현 범위
+
+### 기술 스택
+
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- H2 Database
+- Spring Security Crypto `PasswordEncoder`
+- Bean Validation
+
+### 도메인
+
+```text
+User
+├─ id
+├─ name
+└─ password
+
+Post
+├─ id
+├─ title
+├─ body
+└─ author
+```
+
+- `Post`와 `User`의 id는 서비스 계층에서 UUID v7로 생성합니다.
+- `Post`는 작성자인 `User`와 연관관계를 가집니다.
+- `BaseEntity`를 통해 생성일과 수정일을 관리합니다.
+
+### 게시글 기능
+
+- 게시글 등록
+- 게시글 전체 조회
+- 게시글 단건 조회
+- 게시글 수정
+- 게시글 삭제
+- 로그인한 사용자의 게시글만 조회
+
+### 유저 기능
+
+- 유저 등록
+- 유저 전체 조회
+- 유저 단건 조회
+- 유저 수정
+- 유저 삭제
+- 현재 로그인한 유저 조회
+
+### 인증 기능
+
+- 세션 기반 로그인
+- 세션 저장소는 인메모리 `Map` 사용
+- 요청에서 세션 id를 추출하는 필터
+- 세션 id의 유효성을 확인하는 인터셉터
+- 로그인 유저를 컨트롤러 파라미터로 주입하는 아규먼트 리졸버
+
+### 권한 정책
+
+- 게시글 생성은 로그인한 사용자만 가능합니다.
+- 게시글 수정과 삭제는 작성자만 가능합니다.
+- 작성자가 아닌 사용자가 게시글을 수정하거나 삭제하면 `403 Forbidden`을 반환합니다.
+- 인증되지 않은 사용자가 로그인이 필요한 API에 접근하면 `401 Unauthorized`를 반환합니다.
+
+### API
+
+#### Users
+
+```text
+POST   /users
+GET    /users
+GET    /users/{id}
+PUT    /users/{id}
+DELETE /users/{id}
+
+POST   /users/login
+GET    /users/me
+GET    /users/me/posts
+```
+
+#### Posts
+
+```text
+POST   /posts
+GET    /posts
+GET    /posts/{id}
+PUT    /posts/{id}
+DELETE /posts/{id}
+```

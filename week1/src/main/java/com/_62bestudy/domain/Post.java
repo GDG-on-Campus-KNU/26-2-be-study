@@ -3,7 +3,10 @@ package com._62bestudy.domain;
 import com._62bestudy.domain.exception.InvalidPostException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,13 +31,18 @@ public class Post extends BaseEntity {
     @Column(name = "body", nullable = false)
     private String body;
 
-    private Post(String id, String title, String body) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User author;
+
+    private Post(String id, String title, String body, User author) {
         validateTitle(title);
         validateBody(body);
 
         this.id = id;
         this.title = title;
         this.body = body;
+        this.author = author;
     }
 
     public void update(String title, String body) {
@@ -45,8 +53,12 @@ public class Post extends BaseEntity {
         this.body = body;
     }
 
-    public static Post create(String id, String title, String body) {
-        return new Post(id, title, body);
+    public boolean isAuthor(String userId) {
+        return author.getId().equals(userId);
+    }
+
+    public static Post create(String id, String title, String body, User author) {
+        return new Post(id, title, body, author);
     }
 
     private void validateTitle(String title) {
