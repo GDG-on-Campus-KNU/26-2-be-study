@@ -1,6 +1,6 @@
 package com._62bestudy.application;
 
-public interface PostIdGenerator {
+public interface IdGenerator {
 
     String generate();
 }

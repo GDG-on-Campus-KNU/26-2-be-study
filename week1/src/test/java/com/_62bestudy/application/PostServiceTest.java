@@ -3,6 +3,7 @@ package com._62bestudy.application;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com._62bestudy.application.exception.PostNotFoundException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,11 @@ class PostServiceTest {
                 "본문"
         );
 
+        assertNotNull(post.getId());
+        var id = assertDoesNotThrow(() -> UUID.fromString(post.getId()));
+        assertEquals(7, id.version());
+        assertNotNull(post.getCreatedAt());
+        assertNotNull(post.getUpdatedAt());
         assertEquals("제목", post.getTitle());
         assertEquals("본문", post.getBody());
     }

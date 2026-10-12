@@ -3,7 +3,6 @@ package com._62bestudy.application;
 import com._62bestudy.application.exception.PostNotFoundException;
 import com._62bestudy.domain.Post;
 import com._62bestudy.domain.PostRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,16 +12,13 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostIdGenerator postIdGenerator;
+    private final IdGenerator idGenerator;
 
     public Post create(String title, String body) {
-        var id = postIdGenerator.generate();
-
-        var post = new Post(
-                id,
+        var post = Post.create(
+                idGenerator.generate(),
                 title,
-                body,
-                LocalDateTime.now()
+                body
         );
 
         return postRepository.save(post);

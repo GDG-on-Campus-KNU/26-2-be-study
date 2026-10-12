@@ -1,28 +1,40 @@
 package com._62bestudy.domain;
 
 import com._62bestudy.domain.exception.InvalidPostException;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class Post {
+@Entity
+@Table(name = "posts")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Post extends BaseEntity {
 
     private static final int MAX_TITLE_LENGTH = 100;
     private static final int MAX_BODY_LENGTH = 5000;
 
+    @Id
+    @Column(name = "id")
     private String id;
-    private String title;
-    private String body;
-    private LocalDateTime createdAt;
 
-    public Post(String id, String title, String body, LocalDateTime createdAt) {
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "body", nullable = false)
+    private String body;
+
+    private Post(String id, String title, String body) {
         validateTitle(title);
         validateBody(body);
 
         this.id = id;
         this.title = title;
         this.body = body;
-        this.createdAt = createdAt;
     }
 
     public void update(String title, String body) {
@@ -31,6 +43,10 @@ public class Post {
 
         this.title = title;
         this.body = body;
+    }
+
+    public static Post create(String id, String title, String body) {
+        return new Post(id, title, body);
     }
 
     private void validateTitle(String title) {
