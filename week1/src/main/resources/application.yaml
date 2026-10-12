@@ -6,3 +6,9 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+session:
+  cookie-name: SESSION_ID
+  header-name: X-Session-Id
+  session-id-attribute: sessionId
+  current-user-attribute: currentUser

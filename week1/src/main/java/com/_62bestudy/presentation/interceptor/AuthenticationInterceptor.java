@@ -1,7 +1,7 @@
 package com._62bestudy.presentation.interceptor;
 
 import com._62bestudy.application.SessionStore;
-import com._62bestudy.presentation.SessionAttributes;
+import com._62bestudy.presentation.config.SessionProperties;
 import com._62bestudy.presentation.exception.UnauthorizedException;
 import com._62bestudy.presentation.resolver.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final SessionStore sessionStore;
+    private final SessionProperties sessionProperties;
 
     @Override
     public boolean preHandle(
@@ -33,7 +34,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        var sessionId = (String) request.getAttribute(SessionAttributes.SESSION_ID);
+        var sessionId = (String) request.getAttribute(sessionProperties.sessionIdAttribute());
         if (sessionId == null || sessionId.isBlank()) {
             throw new UnauthorizedException("로그인이 필요합니다.");
         }
@@ -41,7 +42,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         var currentUser = sessionStore.findById(sessionId)
                 .orElseThrow(() -> new UnauthorizedException("로그인이 필요합니다."));
 
-        request.setAttribute(SessionAttributes.CURRENT_USER, currentUser);
+        request.setAttribute(sessionProperties.currentUserAttribute(), currentUser);
 
         return true;
     }

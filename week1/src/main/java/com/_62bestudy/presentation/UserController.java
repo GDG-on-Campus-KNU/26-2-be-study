@@ -3,6 +3,7 @@ package com._62bestudy.presentation;
 import com._62bestudy.application.PostService;
 import com._62bestudy.application.SessionService;
 import com._62bestudy.application.UserService;
+import com._62bestudy.presentation.config.SessionProperties;
 import com._62bestudy.presentation.dto.PostResponse;
 import com._62bestudy.presentation.dto.UserCreateRequest;
 import com._62bestudy.presentation.dto.UserLoginRequest;
@@ -34,6 +35,7 @@ public class UserController {
     private final UserService userService;
     private final SessionService sessionService;
     private final PostService postService;
+    private final SessionProperties sessionProperties;
 
     @PostMapping
     public ResponseEntity<UserResponse> create(
@@ -58,12 +60,12 @@ public class UserController {
                 request.name(),
                 request.password()
         );
-        var cookie = new Cookie(SessionAttributes.SESSION_COOKIE_NAME, sessionId);
+        var cookie = new Cookie(sessionProperties.cookieName(), sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
 
         response.addCookie(cookie);
-        response.setHeader(SessionAttributes.SESSION_HEADER_NAME, sessionId);
+        response.setHeader(sessionProperties.headerName(), sessionId);
 
         return ResponseEntity.noContent().build();
     }

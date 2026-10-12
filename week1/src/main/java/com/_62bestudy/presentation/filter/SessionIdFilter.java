@@ -1,6 +1,6 @@
 package com._62bestudy.presentation.filter;
 
-import com._62bestudy.presentation.SessionAttributes;
+import com._62bestudy.presentation.config.SessionProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -9,11 +9,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
+@RequiredArgsConstructor
 public class SessionIdFilter extends OncePerRequestFilter {
+
+    private final SessionProperties sessionProperties;
 
     @Override
     protected void doFilterInternal(
@@ -23,7 +27,7 @@ public class SessionIdFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         findSessionId(request)
                 .ifPresent(sessionId -> request.setAttribute(
-                        SessionAttributes.SESSION_ID,
+                        sessionProperties.sessionIdAttribute(),
                         sessionId
                 ));
 
@@ -31,7 +35,7 @@ public class SessionIdFilter extends OncePerRequestFilter {
     }
 
     private Optional<String> findSessionId(HttpServletRequest request) {
-        var headerSessionId = request.getHeader(SessionAttributes.SESSION_HEADER_NAME);
+        var headerSessionId = request.getHeader(sessionProperties.headerName());
         if (headerSessionId != null && !headerSessionId.isBlank()) {
             return Optional.of(headerSessionId);
         }
@@ -42,7 +46,7 @@ public class SessionIdFilter extends OncePerRequestFilter {
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> SessionAttributes.SESSION_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> sessionProperties.cookieName().equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .filter(value -> !value.isBlank())
                 .findFirst();
