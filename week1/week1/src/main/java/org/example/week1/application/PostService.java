@@ -1,6 +1,7 @@
 package org.example.week1.application;
 
 import lombok.RequiredArgsConstructor;
+import org.example.week1.application.exception.PostNotFoundException;
 import org.example.week1.domain.Post;
 import org.example.week1.domain.PostRepository;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,18 @@ public class PostService {
 
     public Post findById(String id) {
         return postRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new PostNotFoundException(
+                        "해당 게시글을 찾을 수 없습니다."
+                ));
     }
 
-    public Post update(String id, String title, String content) {   // ")" 빠져 있었고, 파라미터도 변경
+    public Post update(String id, String title, String content) {
         Post post = findById(id);
         post.update(title, content);
         return postRepository.save(post);
     }
 
     public void delete(String id) {
-        postRepository.deleteById(id);   // void 메서드에서 return 제거
+        postRepository.deleteById(id);
     }
 }
