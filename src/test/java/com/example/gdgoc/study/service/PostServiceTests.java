@@ -34,7 +34,7 @@ class PostServiceTests {
 
   @Test
   void createPostSavesAndReturnsPost() {
-    Post savedPost = new Post("제목", "내용");
+    Post savedPost = Post.create("제목", "내용");
     when(postRepository.save(any(Post.class))).thenReturn(savedPost);
 
     Post result = service.createPost("제목", "내용");
@@ -54,7 +54,7 @@ class PostServiceTests {
 
   @Test
   void getPostsReturnsRepositoryResults() {
-    List<Post> posts = List.of(new Post("제목", "내용"));
+    List<Post> posts = List.of(Post.create("제목", "내용"));
     when(postRepository.findAll()).thenReturn(posts);
 
     assertSame(posts, service.getPosts());
@@ -62,7 +62,7 @@ class PostServiceTests {
 
   @Test
   void updatePostMutatesAndSavesExistingPost() {
-    Post existingPost = new Post("이전 제목", "이전 내용");
+    Post existingPost = Post.create("이전 제목", "이전 내용");
     when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
     when(postRepository.save(existingPost)).thenReturn(existingPost);
 
@@ -76,7 +76,7 @@ class PostServiceTests {
 
   @Test
   void updatePostRejectsBlankFieldsWithoutMutatingOrSaving() {
-    Post existingPost = new Post("이전 제목", "이전 내용");
+    Post existingPost = Post.create("이전 제목", "이전 내용");
     when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
 
     assertThrows(InvalidPostException.class, () -> service.updatePost(1L, "제목", "  "));

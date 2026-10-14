@@ -18,7 +18,7 @@ public class PostService {
 
   @Transactional
   public Post createPost(String title, String content) {
-    return postRepository.save(new Post(title, content));
+    return postRepository.save(Post.create(title, content));
   }
 
   @Transactional(readOnly = true)

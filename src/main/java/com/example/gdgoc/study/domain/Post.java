@@ -16,10 +16,14 @@ public class Post {
 
   protected Post() {}
 
-  public Post(String title, String content) {
+  private Post(String title, String content) {
     validate(title, content);
     this.title = title;
     this.content = content;
+  }
+
+  public static Post create(String title, String content) {
+    return new Post(title, content);
   }
 
   public Long getId() {

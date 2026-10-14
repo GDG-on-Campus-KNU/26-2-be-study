@@ -17,7 +17,7 @@ class PostRepositoryTests {
 
   @Test
   void persistsFindsUpdatesAndDeletesPost() {
-    Post post = postRepository.save(new Post("제목", "내용"));
+    Post post = postRepository.save(Post.create("제목", "내용"));
 
     assertTrue(post.getId() > 0);
     assertEquals("제목", postRepository.findById(post.getId()).orElseThrow().getTitle());
