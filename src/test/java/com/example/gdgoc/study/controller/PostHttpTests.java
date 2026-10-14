@@ -25,7 +25,7 @@ class PostHttpTests {
       HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
   @Test
-  void httpCrudPreservesSuccessContractAndMapsMissingPostsToPlainText404() throws Exception {
+  void httpCrudPreservesSuccessContractAndMapsMissingPostsToJson404() throws Exception {
     assertJson(request("GET", "/posts"), 200, "[]");
 
     HttpResponse<String> created =
@@ -55,8 +55,10 @@ class PostHttpTests {
       String body = method.equals("PUT") ? "{\"title\":\"없는 제목\",\"content\":\"없는 내용\"}" : null;
       HttpResponse<String> response = request(method, "/posts/" + missingId, body);
 
-      assertEquals(404, response.statusCode(), method);
-      assertEquals("Post " + missingId + " not found", response.body(), method);
+      assertJson(
+          response,
+          404,
+          "{\"code\":\"POST_NOT_FOUND\",\"message\":\"존재하지 않는 게시글입니다.\"}");
       assertJson(request("GET", "/posts"), 200, "[" + updatedJson + "]");
     }
 
@@ -69,8 +71,10 @@ class PostHttpTests {
     for (String method : new String[] {"GET", "DELETE"}) {
       HttpResponse<String> response = request(method, "/posts/" + id);
 
-      assertEquals(404, response.statusCode());
-      assertEquals("Post " + id + " not found", response.body());
+      assertJson(
+          response,
+          404,
+          "{\"code\":\"POST_NOT_FOUND\",\"message\":\"존재하지 않는 게시글입니다.\"}");
     }
   }
 
@@ -78,12 +82,16 @@ class PostHttpTests {
   void rejectsBlankPostFieldsOnCreateAndUpdate() throws Exception {
     HttpResponse<String> blankTitle =
         request("POST", "/posts", "{\"title\":\" \",\"content\":\"내용\"}");
-    assertEquals(400, blankTitle.statusCode());
-    assertEquals("title must not be blank", blankTitle.body());
+    assertJson(
+        blankTitle,
+        400,
+        "{\"code\":\"INVALID_POST\",\"message\":\"제목을 입력해주세요.\"}");
 
     HttpResponse<String> missingContent = request("POST", "/posts", "{\"title\":\"제목\"}");
-    assertEquals(400, missingContent.statusCode());
-    assertEquals("content must not be blank", missingContent.body());
+    assertJson(
+        missingContent,
+        400,
+        "{\"code\":\"INVALID_POST\",\"message\":\"내용을 입력해주세요.\"}");
     assertJson(request("GET", "/posts"), 200, "[]");
 
     HttpResponse<String> created =
@@ -92,8 +100,10 @@ class PostHttpTests {
 
     HttpResponse<String> blankContent =
         request("PUT", "/posts/" + id, "{\"title\":\"새 제목\",\"content\":\"  \"}");
-    assertEquals(400, blankContent.statusCode());
-    assertEquals("content must not be blank", blankContent.body());
+    assertJson(
+        blankContent,
+        400,
+        "{\"code\":\"INVALID_POST\",\"message\":\"내용을 입력해주세요.\"}");
     assertJson(
         request("GET", "/posts/" + id),
         200,
@@ -101,8 +111,10 @@ class PostHttpTests {
 
     HttpResponse<String> nullTitle =
         request("PUT", "/posts/" + id, "{\"title\":null,\"content\":\"새 내용\"}");
-    assertEquals(400, nullTitle.statusCode());
-    assertEquals("title must not be blank", nullTitle.body());
+    assertJson(
+        nullTitle,
+        400,
+        "{\"code\":\"INVALID_POST\",\"message\":\"제목을 입력해주세요.\"}");
 
     assertEquals(204, request("DELETE", "/posts/" + id).statusCode());
     assertJson(request("GET", "/posts"), 200, "[]");

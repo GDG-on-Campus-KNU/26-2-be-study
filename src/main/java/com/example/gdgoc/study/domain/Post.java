@@ -46,10 +46,10 @@ public class Post {
 
   private static void validate(String title, String content) {
     if (title == null || title.isBlank()) {
-      throw new InvalidPostException("title must not be blank");
+      throw new InvalidPostException("제목을 입력해주세요.");
     }
     if (content == null || content.isBlank()) {
-      throw new InvalidPostException("content must not be blank");
+      throw new InvalidPostException("내용을 입력해주세요.");
     }
   }
 }

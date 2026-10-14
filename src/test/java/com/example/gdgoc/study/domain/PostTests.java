@@ -27,7 +27,7 @@ class PostTests {
     InvalidPostException exception =
         assertThrows(InvalidPostException.class, () -> Post.create(blankTitle, "내용"));
 
-    assertEquals("title must not be blank", exception.getMessage());
+    assertEquals("제목을 입력해주세요.", exception.getMessage());
   }
 
   @ParameterizedTest
@@ -37,7 +37,7 @@ class PostTests {
     InvalidPostException exception =
         assertThrows(InvalidPostException.class, () -> Post.create("제목", blankContent));
 
-    assertEquals("content must not be blank", exception.getMessage());
+    assertEquals("내용을 입력해주세요.", exception.getMessage());
   }
 
   @Test
@@ -57,7 +57,7 @@ class PostTests {
     InvalidPostException exception =
         assertThrows(InvalidPostException.class, () -> post.update(blankTitle, "수정 내용"));
 
-    assertEquals("title must not be blank", exception.getMessage());
+    assertEquals("제목을 입력해주세요.", exception.getMessage());
   }
 
   @ParameterizedTest
@@ -68,6 +68,6 @@ class PostTests {
     InvalidPostException exception =
         assertThrows(InvalidPostException.class, () -> post.update("수정 제목", blankContent));
 
-    assertEquals("content must not be blank", exception.getMessage());
+    assertEquals("내용을 입력해주세요.", exception.getMessage());
   }
 }

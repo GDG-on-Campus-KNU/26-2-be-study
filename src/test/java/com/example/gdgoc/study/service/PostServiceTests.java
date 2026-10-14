@@ -91,6 +91,7 @@ class PostServiceTests {
     PostNotFoundException exception =
         assertThrows(PostNotFoundException.class, () -> service.getPost(42L));
 
-    assertEquals("Post 42 not found", exception.getMessage());
+    assertEquals("존재하지 않는 게시글입니다.", exception.getMessage());
+    assertEquals(42L, exception.getPostId());
   }
 }
