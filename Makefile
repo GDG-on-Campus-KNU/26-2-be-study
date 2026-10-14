@@ -2,7 +2,7 @@
 
 COMPOSE := docker compose
 
-.PHONY: help db-up run dev up down status logs app-logs db-logs build
+.PHONY: help db-up run dev up down status logs app-logs db-logs test build
 
 help: ## Show available commands
 	@awk 'BEGIN { FS = ":.*##"; print "Usage: make <target>\n" } /^[a-zA-Z0-9_-]+:.*##/ { printf "  %-12s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -35,3 +35,6 @@ db-logs: ## Follow PostgreSQL container logs
 
 build: ## Build the Spring Boot executable JAR
 	./gradlew bootJar
+
+test: ## Run tests
+	./gradlew test
