@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class PostService {
 
   private final PostRepository postRepository;
@@ -21,29 +22,23 @@ public class PostService {
     return postRepository.save(Post.create(title, content));
   }
 
-  @Transactional(readOnly = true)
   public List<Post> getPosts() {
     return postRepository.findAll();
   }
 
-  @Transactional(readOnly = true)
   public Post getPost(Long id) {
-    return findPost(id);
+    return postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
   }
 
   @Transactional
   public Post updatePost(Long id, String title, String content) {
-    Post existingPost = findPost(id);
+    Post existingPost = getPost(id);
     existingPost.update(title, content);
-    return postRepository.save(existingPost);
+    return existingPost;
   }
 
   @Transactional
   public void deletePost(Long id) {
-    postRepository.delete(findPost(id));
-  }
-
-  private Post findPost(Long id) {
-    return postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+    postRepository.delete(getPost(id));
   }
 }

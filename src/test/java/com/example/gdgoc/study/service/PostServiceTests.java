@@ -61,17 +61,15 @@ class PostServiceTests {
   }
 
   @Test
-  void updatePostMutatesAndSavesExistingPost() {
+  void updatePostMutatesExistingPost() {
     Post existingPost = Post.create("이전 제목", "이전 내용");
     when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
-    when(postRepository.save(existingPost)).thenReturn(existingPost);
 
     Post updatedPost = service.updatePost(1L, "수정 제목", "수정 내용");
 
     assertSame(existingPost, updatedPost);
     assertEquals("수정 제목", updatedPost.getTitle());
     assertEquals("수정 내용", updatedPost.getContent());
-    verify(postRepository).save(existingPost);
   }
 
   @Test
