@@ -1,4 +1,5 @@
 package com.example.week1.dto;
+//클라이언트의 요청을 서버에 보낼때 사용할 데이터의 모양을 정하는것 -->>> DTO
 
 public class PostCreateRequest {
     //id는 서버가 만든다. 
