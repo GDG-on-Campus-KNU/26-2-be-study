@@ -1,0 +1,31 @@
+@baseUrl = http://localhost:3000
+
+### 1) 전체 조회 → 200 ([])
+GET {{baseUrl}}/memos
+
+### 2) 생성 → 201, { "id": 1, "content": "첫 번째 메모" }
+POST {{baseUrl}}/memos
+Content-Type: application/json
+
+{ "content": "첫 번째 메모" }
+
+### 3) 같은 내용으로 생성 → 201, 중복 검사 없으므로 id만 2로 증가
+POST {{baseUrl}}/memos
+Content-Type: application/json
+
+{ "content": "첫 번째 메모" }
+
+### 4) id별 조회 — id 1 → 200
+GET {{baseUrl}}/memos/1
+
+### 5) 수정 — PUT, id 1의 content 교체 → 200
+PUT {{baseUrl}}/memos/1
+Content-Type: application/json
+
+{ "content": "수정된 메모" }
+
+### 6) 삭제 — id 1 → 200, { "message": "삭제 완료", "id": 1 }
+DELETE {{baseUrl}}/memos/1
+
+### 7) 없는 메모 조회 — 방금 삭제한 id 1 → 404 NotFoundException
+GET {{baseUrl}}/memos/1
