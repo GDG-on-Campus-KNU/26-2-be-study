@@ -1,0 +1,55 @@
+package com.example.gdgoc.study.domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Post {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String title;
+  private String content;
+
+  protected Post() {}
+
+  private Post(String title, String content) {
+    validate(title, content);
+    this.title = title;
+    this.content = content;
+  }
+
+  public static Post create(String title, String content) {
+    return new Post(title, content);
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void update(String title, String content) {
+    validate(title, content);
+    this.title = title;
+    this.content = content;
+  }
+
+  private static void validate(String title, String content) {
+    if (title == null || title.isBlank()) {
+      throw new InvalidPostException("제목을 입력해주세요.");
+    }
+    if (content == null || content.isBlank()) {
+      throw new InvalidPostException("내용을 입력해주세요.");
+    }
+  }
+}
