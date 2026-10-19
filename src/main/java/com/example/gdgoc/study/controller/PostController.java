@@ -5,6 +5,7 @@ import com.example.gdgoc.study.dto.CreatePostRequest;
 import com.example.gdgoc.study.dto.PostResponse;
 import com.example.gdgoc.study.dto.UpdatePostRequest;
 import com.example.gdgoc.study.service.PostService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<PostResponse> createPost(@RequestBody CreatePostRequest request) {
+  public ResponseEntity<PostResponse> createPost(@Valid @RequestBody CreatePostRequest request) {
     Post post = postService.createPost(request.title(), request.content());
     return ResponseEntity.created(URI.create("/posts/" + post.getId()))
         .body(PostResponse.from(post));
@@ -46,7 +47,7 @@ public class PostController {
 
   @PutMapping("/{id}")
   public ResponseEntity<PostResponse> updatePost(
-      @PathVariable Long id, @RequestBody UpdatePostRequest request) {
+      @PathVariable Long id, @Valid @RequestBody UpdatePostRequest request) {
     return ResponseEntity.ok(
         PostResponse.from(postService.updatePost(id, request.title(), request.content())));
   }

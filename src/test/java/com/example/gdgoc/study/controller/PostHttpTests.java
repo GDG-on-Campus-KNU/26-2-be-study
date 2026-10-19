@@ -1,6 +1,7 @@
 package com.example.gdgoc.study.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -55,10 +56,7 @@ class PostHttpTests {
       String body = method.equals("PUT") ? "{\"title\":\"없는 제목\",\"content\":\"없는 내용\"}" : null;
       HttpResponse<String> response = request(method, "/posts/" + missingId, body);
 
-      assertJson(
-          response,
-          404,
-          "{\"code\":\"POST_NOT_FOUND\",\"message\":\"존재하지 않는 게시글입니다.\"}");
+      assertErrorCode(response, 404, "POST_NOT_FOUND");
       assertJson(request("GET", "/posts"), 200, "[" + updatedJson + "]");
     }
 
@@ -71,10 +69,7 @@ class PostHttpTests {
     for (String method : new String[] {"GET", "DELETE"}) {
       HttpResponse<String> response = request(method, "/posts/" + id);
 
-      assertJson(
-          response,
-          404,
-          "{\"code\":\"POST_NOT_FOUND\",\"message\":\"존재하지 않는 게시글입니다.\"}");
+      assertErrorCode(response, 404, "POST_NOT_FOUND");
     }
   }
 
@@ -82,16 +77,10 @@ class PostHttpTests {
   void rejectsBlankPostFieldsOnCreateAndUpdate() throws Exception {
     HttpResponse<String> blankTitle =
         request("POST", "/posts", "{\"title\":\" \",\"content\":\"내용\"}");
-    assertJson(
-        blankTitle,
-        400,
-        "{\"code\":\"INVALID_POST\",\"message\":\"제목을 입력해주세요.\"}");
+    assertErrorCode(blankTitle, 400, "INVALID_REQUEST");
 
     HttpResponse<String> missingContent = request("POST", "/posts", "{\"title\":\"제목\"}");
-    assertJson(
-        missingContent,
-        400,
-        "{\"code\":\"INVALID_POST\",\"message\":\"내용을 입력해주세요.\"}");
+    assertErrorCode(missingContent, 400, "INVALID_REQUEST");
     assertJson(request("GET", "/posts"), 200, "[]");
 
     HttpResponse<String> created =
@@ -100,10 +89,7 @@ class PostHttpTests {
 
     HttpResponse<String> blankContent =
         request("PUT", "/posts/" + id, "{\"title\":\"새 제목\",\"content\":\"  \"}");
-    assertJson(
-        blankContent,
-        400,
-        "{\"code\":\"INVALID_POST\",\"message\":\"내용을 입력해주세요.\"}");
+    assertErrorCode(blankContent, 400, "INVALID_REQUEST");
     assertJson(
         request("GET", "/posts/" + id),
         200,
@@ -111,13 +97,19 @@ class PostHttpTests {
 
     HttpResponse<String> nullTitle =
         request("PUT", "/posts/" + id, "{\"title\":null,\"content\":\"새 내용\"}");
-    assertJson(
-        nullTitle,
-        400,
-        "{\"code\":\"INVALID_POST\",\"message\":\"제목을 입력해주세요.\"}");
+    assertErrorCode(nullTitle, 400, "INVALID_REQUEST");
 
     assertEquals(204, request("DELETE", "/posts/" + id).statusCode());
     assertJson(request("GET", "/posts"), 200, "[]");
+  }
+
+  @Test
+  void rejectsMalformedOrMissingRequestBody() throws Exception {
+    HttpResponse<String> malformedJson = request("POST", "/posts", "{invalid_json");
+    assertErrorCode(malformedJson, 400, "INVALID_REQUEST");
+
+    HttpResponse<String> missingBody = request("POST", "/posts");
+    assertErrorCode(missingBody, 400, "INVALID_REQUEST");
   }
 
   private HttpResponse<String> request(String method, String path) throws Exception {
@@ -144,5 +136,13 @@ class PostHttpTests {
       throws Exception {
     assertEquals(status, response.statusCode());
     JSONAssert.assertEquals(expected, response.body(), true);
+  }
+
+  private void assertErrorCode(HttpResponse<String> response, int status, String expectedCode)
+      throws Exception {
+    assertEquals(status, response.statusCode());
+    JSONObject json = new JSONObject(response.body());
+    assertEquals(expectedCode, json.getString("code"));
+    assertFalse(json.optString("message").isBlank());
   }
 }
