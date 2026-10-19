@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.10.3"
+    id("com.diffplug.spotless") version "8.10.4"
 }
 
 group = "com.example"
@@ -38,7 +38,7 @@ tasks.withType<Test> {
 spotless {
     java {
         target("src/**/*.java")
-        googleJavaFormat("1.30.0")
+        googleJavaFormat("1.36.1")
     }
     kotlinGradle {
         target("*.gradle.kts")
