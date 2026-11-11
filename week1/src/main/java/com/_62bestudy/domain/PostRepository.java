@@ -1,15 +1,9 @@
 package com._62bestudy.domain;
 
 import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PostRepository {
+public interface PostRepository extends JpaRepository<Post, String> {
 
-    Post save(Post post);
-
-    Optional<Post> findById(String id);
-
-    List<Post> findAll();
-
-    void delete(Post post);
+    List<Post> findAllByAuthorId(String authorId);
 }

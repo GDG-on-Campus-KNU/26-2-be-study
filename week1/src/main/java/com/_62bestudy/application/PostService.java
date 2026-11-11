@@ -1,9 +1,9 @@
 package com._62bestudy.application;
 
+import com._62bestudy.application.exception.ForbiddenPostAccessException;
 import com._62bestudy.application.exception.PostNotFoundException;
 import com._62bestudy.domain.Post;
 import com._62bestudy.domain.PostRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostIdGenerator postIdGenerator;
+    private final UserService userService;
+    private final IdGenerator idGenerator;
 
-    public Post create(String title, String body) {
-        var id = postIdGenerator.generate();
-
-        var post = new Post(
-                id,
+    public Post create(String userId, String title, String body) {
+        var author = userService.findById(userId);
+        var post = Post.create(
+                idGenerator.generate(),
                 title,
                 body,
-                LocalDateTime.now()
+                author
         );
 
         return postRepository.save(post);
@@ -32,6 +32,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public List<Post> findAllByAuthorId(String authorId) {
+        return postRepository.findAllByAuthorId(authorId);
+    }
+
     public Post findById(String id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(
@@ -39,17 +43,25 @@ public class PostService {
                 ));
     }
 
-    public Post update(String id, String title, String body) {
+    public Post update(String userId, String id, String title, String body) {
         var post = findById(id);
+        validateAuthor(userId, post);
 
         post.update(title, body);
 
         return postRepository.save(post);
     }
 
-    public void delete(String id) {
+    public void delete(String userId, String id) {
         var post = findById(id);
+        validateAuthor(userId, post);
 
         postRepository.delete(post);
+    }
+
+    private void validateAuthor(String userId, Post post) {
+        if (!post.isAuthor(userId)) {
+            throw new ForbiddenPostAccessException("게시글 작성자만 접근할 수 있습니다.");
+        }
     }
 }

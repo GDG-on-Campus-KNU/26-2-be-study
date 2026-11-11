@@ -3,7 +3,6 @@ package com._62bestudy.domain;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com._62bestudy.domain.exception.InvalidPostException;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 class PostTest {
@@ -13,14 +12,16 @@ class PostTest {
         var id = "post-id";
         var title = "제목";
         var body = "본문";
-        var createdAt = LocalDateTime.of(2026, 10, 3, 12, 0);
+        var author = createUser();
 
-        var post = new Post(id, title, body, createdAt);
+        var post = Post.create(id, title, body, author);
 
         assertEquals(id, post.getId());
+        assertNull(post.getCreatedAt());
+        assertNull(post.getUpdatedAt());
         assertEquals(title, post.getTitle());
         assertEquals(body, post.getBody());
-        assertEquals(createdAt, post.getCreatedAt());
+        assertEquals(author, post.getAuthor());
     }
 
     @Test
@@ -39,11 +40,11 @@ class PostTest {
 
         assertThrows(
                 InvalidPostException.class,
-                () -> new Post(
+                () -> Post.create(
                         "post-id",
                         title,
                         "본문",
-                        LocalDateTime.now()
+                        createUser()
                 )
         );
     }
@@ -54,21 +55,29 @@ class PostTest {
 
         assertThrows(
                 InvalidPostException.class,
-                () -> new Post(
+                () -> Post.create(
                         "post-id",
                         "제목",
                         body,
-                        LocalDateTime.now()
+                        createUser()
                 )
         );
     }
 
     private Post createPost() {
-        return new Post(
+        return Post.create(
                 "post-id",
                 "제목",
                 "본문",
-                LocalDateTime.of(2026, 10, 3, 12, 0)
+                createUser()
+        );
+    }
+
+    private User createUser() {
+        return User.create(
+                "user-id",
+                "유저",
+                "password"
         );
     }
 }

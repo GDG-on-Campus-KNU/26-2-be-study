@@ -1,8 +1,14 @@
 package com._62bestudy.presentation;
 
+import com._62bestudy.application.exception.DuplicateUserNameException;
+import com._62bestudy.application.exception.ForbiddenPostAccessException;
+import com._62bestudy.application.exception.InvalidLoginException;
 import com._62bestudy.application.exception.PostNotFoundException;
+import com._62bestudy.application.exception.UserNotFoundException;
 import com._62bestudy.domain.exception.InvalidPostException;
+import com._62bestudy.domain.exception.InvalidUserException;
 import com._62bestudy.presentation.dto.ErrorResponse;
+import com._62bestudy.presentation.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +32,20 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(
+            UserNotFoundException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
     @ExceptionHandler(InvalidPostException.class)
     public ResponseEntity<ErrorResponse> handleInvalidPost(
             InvalidPostException exception
@@ -37,6 +57,76 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUser(
+            InvalidUserException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(DuplicateUserNameException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateUserName(
+            DuplicateUserNameException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidLogin(
+            InvalidLoginException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
+    @ExceptionHandler(ForbiddenPostAccessException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenPostAccess(
+            ForbiddenPostAccessException exception
+    ) {
+        var response = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(response);
     }
 

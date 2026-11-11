@@ -4,6 +4,9 @@ import com._62bestudy.application.PostService;
 import com._62bestudy.presentation.dto.PostCreateRequest;
 import com._62bestudy.presentation.dto.PostResponse;
 import com._62bestudy.presentation.dto.PostUpdateRequest;
+import com._62bestudy.presentation.resolver.CurrentUser;
+import com._62bestudy.presentation.resolver.LoginUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,9 +30,12 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(
-            @Validated @RequestBody PostCreateRequest request
+            @LoginUser CurrentUser currentUser,
+            @Valid @RequestBody PostCreateRequest request
+
     ) {
         var post = postService.create(
+                currentUser.id(),
                 request.title(),
                 request.body()
         );
@@ -63,10 +68,12 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> update(
+            @LoginUser CurrentUser currentUser,
             @PathVariable String id,
-            @Validated @RequestBody PostUpdateRequest request
+            @Valid @RequestBody PostUpdateRequest request
     ) {
         var post = postService.update(
+                currentUser.id(),
                 id,
                 request.title(),
                 request.body()
@@ -79,9 +86,10 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
+            @LoginUser CurrentUser currentUser,
             @PathVariable String id
     ) {
-        postService.delete(id);
+        postService.delete(currentUser.id(), id);
 
         return ResponseEntity.noContent().build();
     }
